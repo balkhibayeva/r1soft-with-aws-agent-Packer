@@ -1,0 +1,52 @@
+{ 
+    "builders": [
+      {
+        "type": "amazon-ebs",
+        "source_ami_filter": {
+            "filters": {
+                "virtualization-type": "hvm",
+                "name": "CentOS Linux 7 x86_64 HVM EBS ENA 1901_01-b7ee8a69-ee97-4a49-9e68-afaee216db2e-*",
+                "root-device-type": "ebs"
+                },
+            "owners": ["679593333241"],
+            "most_recent": true
+            },
+        "instance_type": "t2.micro",
+        "region": "us-east-1",
+        "ssh_username": "centos",
+        "ami_name": "r1soft-example {{timestamp}}"
+      }
+    ],
+    "provisioners": [
+      {
+      "type": "file",
+      "source": "../files/r1soft.repo",
+      "destination": "/tmp/"
+         },
+         
+      {
+        "type": "breakpoint",
+        "note": "Wait for you to delete"
+          },
+        { 
+          "type": "shell",
+          "inline":[
+            "sudo curl -O https://inspector-agent.amazonaws.com/linux/latest/install",
+            "sudo bash install https://docs.aws.amazon.com/inspector/latest/userguide/inspector_installing-uninstalling-agents.html", 
+            "sudo yum install epel-release -y",
+            "sudo yum install python-pip -y",
+            "sudo mv  /tmp/r1soft.repo  /etc/yum.repos.d/",
+            "sudo mv /etc/yum.repos.d/Cen* /tmp/",
+            "sudo yum install r1soft-cdp-enterprise-server -y",
+            "sudo r1soft-setup --user aizada --pass cholpon  --http-port 8080",
+            "sudo /etc/init.d/cdp-server restart"
+          ]
+          
+           },
+      {
+        "type": "breakpoint",
+        "note": "Wait for you to delete"
+          }
+       ]
+  }
+  
