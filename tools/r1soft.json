@@ -12,8 +12,10 @@
             "most_recent": true
             },
         "instance_type": "t2.micro",
-        "region": "us-east-1",
+        "region": "{{user `region`}}",
         "ssh_username": "centos",
+        "ssh_keypair_name": "london-bastion",
+        "ssh_private_key_file": "~/.ssh/id_rsa",
         "ami_name": "r1soft-example {{timestamp}}"
       }
     ],
@@ -23,11 +25,7 @@
       "source": "../files/r1soft.repo",
       "destination": "/tmp/"
          },
-         
-      {
-        "type": "breakpoint",
-        "note": "Wait for you to delete"
-          },
+        
         { 
           "type": "shell",
           "inline":[
@@ -37,16 +35,22 @@
             "sudo yum install python-pip -y",
             "sudo mv  /tmp/r1soft.repo  /etc/yum.repos.d/",
             "sudo mv /etc/yum.repos.d/Cen* /tmp/",
-            "sudo yum install r1soft-cdp-enterprise-server -y",
-            "sudo r1soft-setup --user aizada --pass cholpon  --http-port 8080",
+            "sudo yum install r1soft-cdp-enterprise-server -y"
+          ]},
+
+          {
+            "type": "breakpoint",
+            "note": "Wait for you to delete"
+              },
+
+           {
+          "type": "shell",
+          "inline":[
+            "sudo r1soft-setup --http-port 8080",
             "sudo /etc/init.d/cdp-server restart"
           ]
           
-           },
-      {
-        "type": "breakpoint",
-        "note": "Wait for you to delete"
-          }
+           }
        ]
   }
   
